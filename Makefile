@@ -31,7 +31,7 @@ all: build
 
 build: $(BUILD_SOUCES)
 	$(COMPILER) -o $(EXECUTABLE) $(BUILD_SOUCES) $(INCLUDE) $(LIBS) $(FLAGS)
-	./$(EXECUTABLE)
+	#./$(EXECUTABLE)
 
 clean:
 	rm -rf *.o $(EXECUTABLE) $(TEST_EXEC)
