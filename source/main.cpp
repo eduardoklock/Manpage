@@ -5,7 +5,7 @@
 #include <sstream>
 
 #include "doubly_linked_list.h"
-#include "AvlTree.h"
+#include "avl_tree.h"
 
 using std::cout;
 using std::endl;
@@ -17,10 +17,10 @@ using std::stringstream;
 
 struct Manual {
 
-	Manual(string name, string text){
-		this->name = name;
-		this->text = text;
-	}
+	Manual(string name, string text):
+		name(name),
+		text(text)
+	{}
 
 	string name;
 	string text;
@@ -28,11 +28,27 @@ struct Manual {
 
 struct Index {
 
-	Index(string word);
+	Index(string word):
+		word(word),
+		manuals()
+	{}
 
-private:
 	string word;
 	doubly_linked_list<Manual> manuals;
+
+	bool operator==(const Index& rhs) const
+    {
+        return this->word == rhs.word;
+    }
+    bool operator<(const Index& rhs) const
+    {
+        return this->word < rhs.word;
+    }
+    
+    bool operator>(const Index& rhs) const
+    {
+        return this->word > rhs.word;
+    }
 };
 
 
@@ -73,7 +89,38 @@ int main(int argc, char** argv){
 		}
 	}
 
-	for (auto manual : manuals) {
-		cout << "{ "<< manual.name << " , " << manual.text << " }" << endl;
+	auto primaryKeyTree = avl_tree<Index>();
+
+	for (auto manual : manuals){
+		stringstream textStream;
+		textStream << manual.text;
+
+		string word;
+		while(textStream >> word){
+
+			Index search = Index(word);
+
+			if(!primaryKeyTree.has(search)){
+				
+				search.manuals.push_back(manual);
+				primaryKeyTree.insert(search);
+			}
+			else
+			{
+				primaryKeyTree.find(search).manuals.push_back(manual);
+			}
+		}
+	}
+
+	fstream file{"manpage.dat"};
+
+	if(file.is_open()){
+		auto primaryKeyList = primaryKeyTree.in_order();
+
+		for(auto index : primaryKeyList){
+			cout << index.word << endl;
+		}
+
+		file.close();
 	}
 }

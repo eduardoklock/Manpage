@@ -5,10 +5,10 @@ COMPILER=clang++
 INCLUDE=-Iinclude
 
 # program souce files
-SOURCES=source/manPage/*.cpp
+SOURCES=source/*.cpp
 
 # build source
-BUILD_SOUCES=$(SOURCES) build/main.cpp
+BUILD_SOUCES=$(SOURCES) 
 
 # test source files
 #TEST_SOURCES=$(SOURCES) test/manPage/*.cpp
