@@ -5,8 +5,6 @@
 #include <list>
 #include <stdexcept>
 
-namespace dataStructures {
-
 template<typename T>
 class AvlTree {
 	using size_type = std::size_t;
@@ -268,5 +266,5 @@ private:
 	size_type _size;
 	node* _root;
 };
-}
+
 #endif

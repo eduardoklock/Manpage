@@ -5,6 +5,7 @@
 #include <sstream>
 
 #include "doubly_linked_list.h"
+#include "AvlTree.h"
 
 using std::cout;
 using std::endl;
@@ -25,10 +26,19 @@ struct Manual {
 	string text;
 };
 
+struct Index {
 
-vector<string> argumentVector(int argc, char** argv){
+	Index(string word);
+
+private:
+	string word;
+	doubly_linked_list<Manual> manuals;
+};
+
+
+doubly_linked_list<string> argumentVector(int argc, char** argv){
 	auto numberOfArguments = argc -1;
-	auto arguments = vector<string> {};
+	auto arguments = doubly_linked_list<string>();
 
 	for(auto i = 0; i < numberOfArguments; i++){
 		arguments.push_back(argv[i + 1]);
@@ -39,23 +49,31 @@ vector<string> argumentVector(int argc, char** argv){
 
 int main(int argc, char** argv){
 
-	auto fileNames = argumentVector(argc, argv);
+	auto filePaths = argumentVector(argc, argv);
 
-	auto manuals = CircularList<Manual>();
+	auto manuals = doubly_linked_list<Manual>();
 
-	for (string fileName : fileNames) {
+	for (string path : filePaths) {
 		fstream file;
-		file.open(fileName);
+		file.open(path);
+
 		if(file.is_open()){
 			stringstream fileTextStream;
 			fileTextStream << file.rdbuf();
 			auto fileText = fileTextStream.str();
 
-			//
+			auto last_slash = path.find_last_of('/');
+			auto last_dot = path.find_last_of('.');
+
+			auto fileName = path.substr(last_slash + 1, last_dot - (last_slash + 1));
+
+			manuals.push_back(Manual(fileName, fileText));
 
 			file.close();
 		}
 	}
 
-	auto manpage = Manual(fileNames.at(0), fileText);
+	for (auto manual : manuals) {
+		cout << "{ "<< manual.name << " , " << manual.text << " }" << endl;
+	}
 }
