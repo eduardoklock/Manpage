@@ -5,13 +5,12 @@ COMPILER=clang++
 INCLUDE=-Iinclude
 
 # program souce files
-SOURCES=source/*.cpp
+GENERATE_SOURCE=source/generate/*.cpp
+SEARCH_SOURCE=source/search/*.cpp
 
 # build source
-BUILD_SOUCES=$(SOURCES) 
-
-# test source files
-#TEST_SOURCES=$(SOURCES) test/manPage/*.cpp
+GENERATE_BUILD_SOUCE=$(GENERATE_SOURCE)
+SEARCH_BUILD_SOURCE=$(SEARCH_SOURCE)
 
 # depencences
 LIBS=-lgtest
@@ -20,18 +19,15 @@ LIBS=-lgtest
 FLAGS=-std=c++11
 
 # executable name
-EXECUTABLE=manpage
-TEST_EXEC=manpage_test
+GENERATE_EXE=generate
+SEARCH_EXE=search
+
 
 all: build
 
-#test: $(TEST_SOURCES)
-#	$(COMPILER) -o $(TEST_EXEC) $(TEST_SOURCES) $(INCLUDE) $(LIBS) $(FLAGS)
-#	./$(TEST_EXEC)
-
-build: $(BUILD_SOUCES)
-	$(COMPILER) -o $(EXECUTABLE) $(BUILD_SOUCES) $(INCLUDE) $(LIBS) $(FLAGS)
-	#./$(EXECUTABLE)
+build: $(GENERATE_BUILD_SOUCE) $(SEARCH_BUILD_SOURCE)
+	$(COMPILER) -o $(GENERATE_EXE) $(GENERATE_BUILD_SOUCE) $(INCLUDE) $(LIBS) $(FLAGS)
+	$(COMPILER) -o $(SEARCH_EXE) $(SEARCH_BUILD_SOURCE) $(INCLUDE) $(LIBS) $(FLAGS)
 
 clean:
-	rm -rf *.o $(EXECUTABLE) $(TEST_EXEC)
+	rm -rf $(GENERATE_EXE) $(SEARCH_EXE)
